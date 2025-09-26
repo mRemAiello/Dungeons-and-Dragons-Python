@@ -1,22 +1,22 @@
-class Gnomo:
+class Gnome:
 
-    def get_destrezza(self):
+    def get_dexterity(self):
         return 0
 
-    def get_intelligenza(self):
+    def get_intelligence(self):
         return 0
 
-    def get_forza(self):
+    def get_strength(self):
         return -2
 
-    def get_saggezza(self):
+    def get_wisdom(self):
         return 0
 
-    def get_carisma(self):
+    def get_charisma(self):
         return 2
 
-    def get_costituzione(self):
+    def get_constitution(self):
         return 2
 
-    def get_nome(self):
-        return "Gnomo"
+    def get_name(self):
+        return "Gnome"

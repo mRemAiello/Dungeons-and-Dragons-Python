@@ -1,18 +1,18 @@
 from dado import d12
 
-class Barbaro:
 
-    def get_dado(self):
+class Barbarian:
+
+    def get_die(self):
         return d12()
 
-    def get_monete(self):
-        i= 0
-        monete= 0
+    def get_coins(self):
+        i = 0
+        coins = 0
         while i < 3:
-            monete += self.get_dado()
-            i+= 1
-        return monete
+            coins += self.get_die()
+            i += 1
+        return coins
 
-    def get_nome(self):
-        return "Barbaro"
-
+    def get_name(self):
+        return "Barbarian"

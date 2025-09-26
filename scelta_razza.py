@@ -3,16 +3,17 @@ import nano
 import elfo
 import gnomo
 
-def scegli_razza(numero):
-    razza = None
-    if numero == 1:
-        razza = umano.Umano()
-    if numero == 2:
-        razza = nano.Nano()
-    if numero == 3:
-        razza = elfo.Elfo()
-    if numero == 4:
-        razza = gnomo.Gnomo()
-    if numero == 0 or numero > 4:
-        print("Il numero della razza prescelta non esiste")
-    return razza
+
+def choose_race(number):
+    race = None
+    if number == 1:
+        race = umano.Human()
+    if number == 2:
+        race = nano.Dwarf()
+    if number == 3:
+        race = elfo.Elf()
+    if number == 4:
+        race = gnomo.Gnome()
+    if number == 0 or number > 4:
+        print("The selected race number does not exist")
+    return race

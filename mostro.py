@@ -1,27 +1,28 @@
-import personaggio as pg
+from personaggio import Character
 
-class Mostro(pg.Personaggio):
 
-    exp= 0
+class Monster(Character):
 
-    def inventario_mostro(self, items):
+    experience_reward = 0
+
+    def populate_inventory(self, items):
         for item in items:
             self.add_item(item)
 
-    def exp_mostro(self, exp):
-        if exp <= 0:
-            print("L'esperienza è minore di 0")
+    def set_experience_reward(self, experience):
+        if experience <= 0:
+            print("Experience must be greater than 0")
             return
-        self.exp= exp
+        self.experience_reward = experience
 
-    def monete_mostro(self, moneta):
-        if moneta <= 0:
-            print("Le monete sono minori di 0")
+    def set_coin_reward(self, coins):
+        if coins <= 0:
+            print("Coins must be greater than 0")
             return
-        self.moneta= moneta
+        self.coins = coins
 
-    def death(self, attaccante):
-        for item in self.inventario:
-            attaccante.add_item(item)
-        attaccante.guadagna_esperienza(self.exp)
-        attaccante.guadagna_monete(self.moneta)
+    def die(self, attacker):
+        for item in self.inventory:
+            attacker.add_item(item)
+        attacker.gain_experience(self.experience_reward)
+        attacker.earn_coins(self.coins)
