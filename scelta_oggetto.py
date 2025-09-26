@@ -1,4 +1,5 @@
 import random
+from typing import Optional
 
 import item
 
@@ -8,8 +9,8 @@ armor_items = [item.Armor("Armatura di cuoio", 18, 12), item.Armor("Armatura a s
 shield_items = [item.Shield("Scudo rotondo", 11, 8), item.Shield("Scudo torre", 12, 10)]
 
 
-def choose_item(number):
-    selected_item = None
+def choose_item(number: int) -> Optional[item.Item]:
+    selected_item: Optional[item.Item] = None
     if number == 1:
         selected_item = random.choice(weapon_items)
     if number == 2:
