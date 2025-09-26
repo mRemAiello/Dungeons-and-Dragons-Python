@@ -9,8 +9,8 @@ def d4():
     return x
 
 def d6():
-        x= int(random.uniform(1, 7))
-        return x
+    x= int(random.uniform(1, 7))
+    return x
 
 def d8():
    x= int(random.uniform(1, 9))
@@ -21,7 +21,7 @@ def d10():
     return x
 
 def d12():
-    x= int(random.uniform(1, 12))
+    x= int(random.uniform(1, 13))
     return x
 
 def d20():
@@ -31,9 +31,3 @@ def d20():
 def dx(x):
     y= int(random.uniform(1, x + 1))
     return y
-
-
-
-
-
-
