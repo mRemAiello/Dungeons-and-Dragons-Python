@@ -1,11 +1,16 @@
+from typing import Optional, Union
+
 import umano
 import nano
 import elfo
 import gnomo
 
 
-def choose_race(number):
-    race = None
+Race = Union[umano.Human, nano.Dwarf, elfo.Elf, gnomo.Gnome]
+
+
+def choose_race(number: int) -> Optional[Race]:
+    race: Optional[Race] = None
     if number == 1:
         race = umano.Human()
     if number == 2:

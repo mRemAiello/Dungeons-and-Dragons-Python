@@ -1,11 +1,21 @@
+from typing import Optional, Union
+
 import barbaro
 import paladino
 import ladro
 import mago
 
 
-def choose_class(number):
-    character_class = None
+CharacterClass = Union[
+    barbaro.Barbarian,
+    paladino.Paladin,
+    ladro.Thief,
+    mago.Wizard,
+]
+
+
+def choose_class(number: int) -> Optional[CharacterClass]:
+    character_class: Optional[CharacterClass] = None
     if number == 1:
         character_class = barbaro.Barbarian()
     if number == 2:
