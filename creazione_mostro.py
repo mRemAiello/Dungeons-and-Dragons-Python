@@ -1,16 +1,18 @@
 import random
-from scelta_oggetto import scegli_oggetto
-from scelta_classe import scegli_classe
-from scelta_razza import scegli_razza
-from mostro import Mostro
 
-def crea_mostro(nome):
-    razza_mostro = int(random.uniform(1, 4))
-    razza= scegli_razza(razza_mostro)
-    classe_mostro= int(random.uniform(1, 4))
-    classe= scegli_classe(classe_mostro)
-    mostro= Mostro(nome, razza, classe)
-    numero = int(random.uniform(1, 4))
-    oggetto= scegli_oggetto(numero)
-    mostro.equip_item(oggetto)
-    return mostro
+from scelta_oggetto import choose_item
+from scelta_classe import choose_class
+from scelta_razza import choose_race
+from mostro import Monster
+
+
+def create_monster(name):
+    monster_race_number = int(random.uniform(1, 4))
+    race = choose_race(monster_race_number)
+    monster_class_number = int(random.uniform(1, 4))
+    character_class = choose_class(monster_class_number)
+    monster = Monster(name, race, character_class)
+    number = int(random.uniform(1, 4))
+    selected_item = choose_item(number)
+    monster.equip_item(selected_item)
+    return monster

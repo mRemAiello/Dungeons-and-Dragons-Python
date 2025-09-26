@@ -1,72 +1,78 @@
+import random
+
 from dado import d6
 from dado import d20
 from dado import d10
 from dado import d4
-import random
-from scelta_oggetto import scegli_oggetto
-from creazione_mostro import crea_mostro
+from scelta_oggetto import choose_item
+from creazione_mostro import create_monster
 
 
-def avventura(personaggio_scelto):
-    lancio= d6()
-    if lancio == 1:
-        lancia_osservare(personaggio_scelto)
-    if lancio == 2:
-        oggetto_random(personaggio_scelto)
-    if lancio == 3:
-        lancia_ascoltare(personaggio_scelto)
-    if lancio == 4:
-        incontro_boss(personaggio_scelto)
-    if  4 < lancio < 7:
-        incontro_boss(personaggio_scelto)
+def adventure(selected_character):
+    roll = d6()
+    if roll == 1:
+        perform_observe_check(selected_character)
+    if roll == 2:
+        random_item(selected_character)
+    if roll == 3:
+        perform_listen_check(selected_character)
+    if roll == 4:
+        meet_boss(selected_character)
+    if 4 < roll < 7:
+        meet_boss(selected_character)
 
-def lancia_osservare(personaggio_scelto):
-    personaggio_scelto.osservare(d20())
-    if personaggio_scelto.osservare(d20()):
-        personaggio_scelto.guadagna_esperienza(1000)
-        print("L'abilità è andata a buon fine e hai guadagnato 1000 exp")
-        if not personaggio_scelto.osservare(d20()):
-            print("L'abilità non è andata a buon fine")
 
-def oggetto_random(personaggio_scelto):
-    numero = int(random.uniform(1, 4))
-    scegli_oggetto(numero)
-    item = scegli_oggetto(numero)
-    personaggio_scelto.add_item(item)
+def perform_observe_check(selected_character):
+    selected_character.observe(d20())
+    if selected_character.observe(d20()):
+        selected_character.gain_experience(1000)
+        print("The ability succeeded and you gained 1000 exp")
+        if not selected_character.observe(d20()):
+            print("The ability failed")
 
-def lancia_ascoltare(personaggio_scelto):
-    personaggio_scelto.ascoltare(d10())
-    if personaggio_scelto.ascoltare(d10()):
-        personaggio_scelto.guadagna_monete(10)
-        print("L'abilità è andata a buon fine e hai guadagnato 10 monete")
-    if not personaggio_scelto.ascoltare(d10()):
-        print("L'abilità non è andata a buon fine")
 
-def incontro_mostro(personaggio_scelto):
-    print("Hai incontrato un mostro")
-    mostro = crea_mostro("Obelix")
-    lancio = d6()
-    if lancio == 1:
-        print("Scappa")
-    if 2 <= lancio <= 4:
-        print("Il tuo personaggio attacca")
-        personaggio_scelto.attacco_ravvicinato(mostro)
-        personaggio_scelto.attacco_a_distanza(mostro)
-    if lancio > 4:
-        print("Il mostro attacca il tuo personaggio")
-        mostro.attacco_ravvicinato(personaggio_scelto)
-        mostro.attacco_a_distanza(personaggio_scelto)
+def random_item(selected_character):
+    number = int(random.uniform(1, 4))
+    choose_item(number)
+    item = choose_item(number)
+    selected_character.add_item(item)
 
-def incontro_boss(personaggio_scelto):
-    print("Hai incontrato un boss")
-    mostro = crea_mostro("Gandalf")
-    mostro.guadagna_esperienza(20000)
-    lancio = d4()
-    if 1 <= lancio <= 3:
-        print("Scappa")
-    if lancio == 4:
-        print("Combattete")
-        personaggio_scelto.attacco_ravvicinato(mostro)
-        personaggio_scelto.attacco_a_distanza(mostro)
-        mostro.attacco_ravvicinato(personaggio_scelto)
-        mostro.attacco_a_distanza(personaggio_scelto)
+
+def perform_listen_check(selected_character):
+    selected_character.listen(d10())
+    if selected_character.listen(d10()):
+        selected_character.earn_coins(10)
+        print("The ability succeeded and you gained 10 coins")
+    if not selected_character.listen(d10()):
+        print("The ability failed")
+
+
+def meet_monster(selected_character):
+    print("You encountered a monster")
+    monster = create_monster("Obelix")
+    roll = d6()
+    if roll == 1:
+        print("Run away")
+    if 2 <= roll <= 4:
+        print("Your character attacks")
+        selected_character.melee_attack(monster)
+        selected_character.ranged_attack(monster)
+    if roll > 4:
+        print("The monster attacks your character")
+        monster.melee_attack(selected_character)
+        monster.ranged_attack(selected_character)
+
+
+def meet_boss(selected_character):
+    print("You encountered a boss")
+    monster = create_monster("Gandalf")
+    monster.gain_experience(20000)
+    roll = d4()
+    if 1 <= roll <= 3:
+        print("Run away")
+    if roll == 4:
+        print("Fight")
+        selected_character.melee_attack(monster)
+        selected_character.ranged_attack(monster)
+        monster.melee_attack(selected_character)
+        monster.ranged_attack(selected_character)

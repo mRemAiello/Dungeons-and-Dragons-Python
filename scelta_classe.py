@@ -2,16 +2,18 @@ import barbaro
 import paladino
 import ladro
 import mago
-def scegli_classe(numero):
-    classe = None
-    if numero == 1:
-        classe= barbaro.Barbaro()
-    if numero == 2:
-        classe = paladino.Paladino()
-    if numero == 3:
-        classe = ladro.Ladro()
-    if numero == 4:
-        classe = mago.Mago()
-    if numero == 0 or numero > 4:
-        print("Il numero della classe prescelta non esiste")
-    return classe
+
+
+def choose_class(number):
+    character_class = None
+    if number == 1:
+        character_class = barbaro.Barbarian()
+    if number == 2:
+        character_class = paladino.Paladin()
+    if number == 3:
+        character_class = ladro.Thief()
+    if number == 4:
+        character_class = mago.Wizard()
+    if number == 0 or number > 4:
+        print("The selected class number does not exist")
+    return character_class
