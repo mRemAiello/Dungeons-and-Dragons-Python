@@ -1,33 +1,33 @@
 import random
 
+
 def d3():
-    x= int(random.uniform(1, 4))
-    return x
+    return int(random.uniform(1, 4))
+
 
 def d4():
-    x= int(random.uniform(1,5))
-    return x
+    return int(random.uniform(1, 5))
+
 
 def d6():
-    x= int(random.uniform(1, 7))
-    return x
+    return int(random.uniform(1, 7))
+
 
 def d8():
-   x= int(random.uniform(1, 9))
-   return x
+    return int(random.uniform(1, 9))
+
 
 def d10():
-    x= int(random.uniform(1, 11))
-    return x
+    return int(random.uniform(1, 11))
+
 
 def d12():
-    x= int(random.uniform(1, 13))
-    return x
+    return int(random.uniform(1, 13))
+
 
 def d20():
-    x= int(random.uniform(1, 21))
-    return x
+    return int(random.uniform(1, 21))
+
 
 def dx(x):
-    y= int(random.uniform(1, x + 1))
-    return y
+    return int(random.uniform(1, x + 1))
