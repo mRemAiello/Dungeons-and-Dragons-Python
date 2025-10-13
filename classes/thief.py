@@ -1,5 +1,7 @@
 from misc.dice import d6
 from classes.base_class import BaseClass
+from items.weapon import Weapon
+from items.armor import Armor
 
 # Bards, Clerics, Druids, Monks, Rogues and Warlocks start with 8 HP and gain +5 with every level up.
 
@@ -17,6 +19,11 @@ class Thief(BaseClass):
 
     def roll_dice(self):
         return d6()
+
+    def get_starting_items(self):
+        short_sword = Weapon("Spada Corta", 16, 6)
+        leather_armor = Armor("Armatura di cuoio", 40, 11)
+        return [short_sword, leather_armor]
 
     def get_name(self):
         return "Ladro"

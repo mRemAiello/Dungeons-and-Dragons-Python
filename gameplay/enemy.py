@@ -1,12 +1,18 @@
-from typing import Iterable
-
-import item as it
-from personaggio import Character
+from gameplay.character import Character
 
 
-class Monster(Character):
+class Enemy(Character):
 
-    experience_reward = 0
+    def handle_attack(self, target):
+        if self.have_weapon():
+            self.melee_attack(target)
+        elif self.have_ranged_weapon():
+            self.ranged_attack(target)
+        else:
+            # Danno a mani nude, da fare
+            self.melee_attack(target)
+
+    """experience_reward = 0
 
     def populate_inventory(self, items: Iterable[it.Item]) -> None:
         for item in items:
@@ -28,4 +34,4 @@ class Monster(Character):
         for item in self.inventory:
             attacker.add_item(item)
         attacker.gain_experience(self.experience_reward)
-        attacker.earn_coins(self.coins)
+        attacker.earn_coins(self.coins)"""

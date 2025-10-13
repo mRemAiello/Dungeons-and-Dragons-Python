@@ -19,4 +19,4 @@ class Elf:
         return -2
 
     def get_name(self):
-        return "Elf"
+        return "Elfo"

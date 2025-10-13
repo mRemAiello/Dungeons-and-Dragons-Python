@@ -36,6 +36,15 @@ class Character:
         self.coins = char_class.get_coins()
         self.assign_points()
 
+    def get_name(self):
+        return self.__name
+
+    def have_weapon(self):
+        return self.__melee_weapon is not None
+
+    def have_ranged_weapon(self):
+        return self.__ranged_weapon is not None
+
     def assign_points(self, bonus_points: int = 30) -> None:
         # Base Stats
         self.__strength = 8 + self.__char_race.get_strength()
@@ -125,35 +134,31 @@ class Character:
         if isinstance(item, Armor):
             self.__armor = item
 
-    """def attack(
-        self,
-        target: "Character",
-        base_damage: int,
-        character_weapon: CharacterWeapon,
-        bonus: int,
-    ) -> None:
+    def attack(self, target: "Character", base_damage: int, weapon: Weapon, bonus: int, ) -> None:
         if self.is_dead():
-            print()
             return
+
         if target.is_dead():
-            print("The target is dead, you cannot hit it anymore")
+            print("Il bersaglio è morto, non puoi attaccare")
             return
-        if character_weapon is None:
-            print(f"{self.name} you do not have the weapon equipped")
+
+        if weapon is None:
+            print(f"{self.__name} non ha nessuna arma equipaggiata")
             return
+
         if self.attack_hits(target, bonus):
             damage = base_damage
-            damage += character_weapon.attack
-            print(f"Hit {target.name} for {damage} damage from {self.name}")
+            damage += weapon.attack
+            print(f"Colpito {target.get_name()} per {damage} danni da {self.__name}")
             target.take_damage(self, damage)
         else:
-            print("Attack missed")
+            print("Attacco fallito")
 
     def melee_attack(self, target: "Character") -> None:
-        self.attack(target, self.__strength, self.melee_weapon, self.__strength)
+        self.attack(target, self.__strength, self.__melee_weapon, self.__strength)
 
     def ranged_attack(self, target: "Character") -> None:
-        self.attack(target, self.__dexterity, self.ranged_weapon, self.__dexterity)"""
+        self.attack(target, self.__dexterity, self.__ranged_weapon, self.__dexterity)
 
     def attack_hits(self, target: "Character", bonus: int) -> bool:
         roll = d20()
@@ -166,13 +171,13 @@ class Character:
                 return True
         return False
 
-    def get_armor_class(self) -> float:
-        armor_class = 10 + (self.__dexterity / 2)
-        if self.armor is not None:
-            armor_class += self.armor.defense
-        if self.shield is not None:
-            armor_class += self.shield.defense
-        return armor_class
+    def get_armor_class(self) -> int:
+        armor_class = 5 + (self.__dexterity / 2)
+        if self.__armor is not None:
+            armor_class += self.__armor.defense
+        if self.__shield is not None:
+            armor_class += self.__shield.defense
+        return int(armor_class)
 
     def take_damage(self, attacker: "Character", damage: int) -> None:
         self.__current_hit_points -= damage
@@ -181,7 +186,7 @@ class Character:
             self.die(attacker)
 
     def die(self, attacker: "Character") -> None:
-        print(f"{self.__name} killed by {attacker.__name}")
+        print(f"{self.__name} ucciso {attacker.__name}")
 
     def is_dead(self) -> bool:
         if self.__current_hit_points <= 0:
@@ -206,20 +211,20 @@ class Character:
         description += f"(Level {self.__level}, Experience: {self.__cur_exp}/{self.get_experience_to_level_up()})\n"
 
         # Stats
-        description += f"HP: {self.__current_hit_points}/{self.__max_hit_points}\n"
+        description += f"HP: {self.__current_hit_points}/{self.__max_hit_points}, CA: {self.get_armor_class()}\n"
         description += f"STR: {self.__strength}, DEX: {self.__dexterity}, CON: {self.__constitution}, "
         description += f"INT: {self.__intelligence}, WIS: {self.__wisdom}, CHA: {self.__charisma}\n"
 
         # Equipaggiamento
         description += "--- Equipaggiamento ---\n"
         if self.__melee_weapon:
-            description += f"{self.__melee_weapon}\n"
+            description += f"Arma: {self.__melee_weapon}\n"
         if self.__ranged_weapon:
-            description += f"{self.__ranged_weapon}\n"
+            description += f"Arma a distanza: {self.__ranged_weapon}\n"
         if self.__armor:
-            description += f"{self.__armor}\n"
+            description += f"Armatura: {self.__armor}\n"
         if self.__shield:
-            description += f"{self.__shield}\n"
+            description += f"Scudo: {self.__shield}\n"
 
         # Inventario
         description += "--- Inventario ---\n"
