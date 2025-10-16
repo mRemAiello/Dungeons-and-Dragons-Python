@@ -22,6 +22,7 @@ class Character:
         self.__cur_exp = 0
         self.__current_hit_points = 0
         self.__max_hit_points = 0
+        self.__bonus_ca = 0
 
         #
         self.__char_race = char_race
@@ -77,6 +78,15 @@ class Character:
         self.__max_hit_points = self.calculate_max_hp()
         self.__current_hit_points = self.__max_hit_points
 
+    def get_level(self):
+        return self.__level
+
+    def set_bonus_ca(self, bonus_ca):
+        self.__bonus_ca = bonus_ca
+
+    def get_bonus_ca(self):
+        return self.__bonus_ca
+
     def calculate_max_hp(self):
         hp = self.__char_class.get_base_hp()
         hp += self.__char_class.get_hp_for_level_up() * (self.__level - 1)
@@ -92,7 +102,7 @@ class Character:
     def get_experience_to_level_up(self) -> int:
         return int(100 * self.__level * (self.__level + 1) / 2)
 
-    def level_up(self) -> None:
+    def level_up(self, show_print=False) -> None:
         self.__level += 1
 
         # HP
@@ -100,17 +110,19 @@ class Character:
         self.__current_hit_points = self.__max_hit_points
 
         #
-        print(f"{self.__name} ha raggiunto il livello {self.__level}\n\n")
+        if show_print:
+            print(f"{self.__name} ha raggiunto il livello {self.__level}\n")
 
     def earn_coins(self, coins: int) -> None:
         if coins < 0:
-            print("Le monete da aggiungere non possono essere minori di 0\n\n")
+            print("Le monete da aggiungere non possono essere minori di 0\n")
             return
         self.coins += coins
 
-    def add_item(self, item: Item) -> None:
+    def add_item(self, item: Item, show_print=False) -> None:
         self.__inventory.append(item)
-        print(f"L'oggetto {item.name} è stato aggiunto all'inventario di {self.__name}\n\n")
+        if show_print:
+            print(f"L'oggetto {item.name} è stato aggiunto all'inventario di {self.__name}\n")
 
     def sell_item(self, item: Item) -> None:
         if item in self.__inventory:
@@ -134,22 +146,42 @@ class Character:
         if isinstance(item, Armor):
             self.__armor = item
 
-    def attack(self, target: "Character", base_damage: int, weapon: Weapon, bonus: int, ) -> None:
+    def heal(self, healer: "Character", heal: int):
+        # Niente da fare se il curatore o il bersaglio sono morti
+        if self.is_dead() or healer.is_dead():
+            return
+
+        # Cura non valida o nulla
+        if heal <= 0:
+            return
+
+        # Calcola gli HP mancanti fino al massimo
+        missing = self.__max_hit_points - self.__current_hit_points
+
+        # Quantità di cura effettiva: limitata agli HP mancanti
+        amount = min(heal, max(0, missing))
+
+        # Applica la cura
+        self.__current_hit_points += amount
+
+        #
+        print(f"{healer.get_name()} cura {self.get_name()} di {amount}")
+
+    def attack(self, target: "Character", base_damage: int, weapon: Weapon, bonus: int) -> None:
         if self.is_dead():
             return
 
         if target.is_dead():
-            print("Il bersaglio è morto, non puoi attaccare")
+            print("Il bersaglio è morto, non puoi attaccare\n")
             return
 
         if weapon is None:
-            print(f"{self.__name} non ha nessuna arma equipaggiata")
+            print(f"{self.__name} non ha nessuna arma equipaggiata\n")
             return
 
         if self.attack_hits(target, bonus):
             damage = base_damage
             damage += weapon.attack
-            print(f"Colpito {target.get_name()} per {damage} danni da {self.__name}")
             target.take_damage(self, damage)
         else:
             print("Attacco fallito")
@@ -172,7 +204,7 @@ class Character:
         return False
 
     def get_armor_class(self) -> int:
-        armor_class = 5 + (self.__dexterity / 2)
+        armor_class = 5 + (self.__dexterity / 2) + self.__bonus_ca
         if self.__armor is not None:
             armor_class += self.__armor.defense
         if self.__shield is not None:
@@ -180,6 +212,7 @@ class Character:
         return int(armor_class)
 
     def take_damage(self, attacker: "Character", damage: int) -> None:
+        print(f"{attacker.get_name()} colpisce {self.get_name()} infliggendo {damage} danni")
         self.__current_hit_points -= damage
         if self.__current_hit_points <= 0:
             self.__current_hit_points = 0
