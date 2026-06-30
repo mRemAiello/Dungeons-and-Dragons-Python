@@ -6,17 +6,28 @@ from spells.spell_heal import SpellHeal
 from spells.spell_bonus_ca import SpellBonusCA
 
 # Player 1
-name = input("Seleziona il nome del tuo personaggio ")
+"""name = input("Seleziona il nome del tuo personaggio ")
 race_number = int(input("Seleziona una razza (0: Umano, 1: Elfo, 2: Nano, 3: Gnomo) "))
-class_number = int(input("Seleziona una classe (0: Barbaro, 1: Bardo, 2: Mago, 3: Paladino, 4: Ladro) "))
+class_number = int(input("Seleziona una classe (0: Barbaro, 1: Bardo, 2: Mago, 3: Paladino, 4: Ladro) "))"""
+name = "Rem"
+race_number = 0
+class_number = 4
 player = create_new_character(name, race_number, class_number)
+
+player.gain_experience(1200)
 
 # Nemico
 enemy = create_new_random_enemy("Bandito")
 
 #
-print(player)
-print(enemy)
+# print(player)
+
+print(player.strength)
+print(player.dexterity)
+print(player.constitution)
+print(player.hp)
+
+"""print(enemy)
 
 spell = SpellDamage("Dardo Incantato (Mitico)", 1, "", "Invocazione", 1, 4, 2)
 spell.launch(player, enemy)
@@ -33,7 +44,7 @@ print(player)
 print()
 print()
 
-print(enemy)
+print(enemy)"""
 
 #
 """player.melee_attack(enemy)

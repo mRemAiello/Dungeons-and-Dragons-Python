@@ -1,5 +1,8 @@
 import random
 from typing import Any
+
+from attributes.attribute import Attribute
+from attributes.fixed_modifier import FixedModifier
 from misc.dice import d20
 from items.item import Item
 from items.ranged_weapon import RangedWeapon
@@ -10,14 +13,15 @@ from items.shield import Shield
 
 class Character:
 
+    strength = None
+    dexterity = None
+    constitution = None
+    intelligence = None
+    wisdom = None
+    charisma = None
+
     def __init__(self, name: str, char_race: Any, char_class: Any) -> None:
         self.__name = name
-        self.__strength = 0
-        self.__dexterity = 0
-        self.__constitution = 0
-        self.__intelligence = 0
-        self.__wisdom = 0
-        self.__charisma = 0
         self.__level = 1
         self.__cur_exp = 0
         self.__current_hit_points = 0
@@ -47,36 +51,63 @@ class Character:
         return self.__ranged_weapon is not None
 
     def assign_points(self, bonus_points: int = 30) -> None:
-        # Base Stats
-        self.__strength = 8 + self.__char_race.get_strength()
-        self.__dexterity = 8 + self.__char_race.get_dexterity()
-        self.__constitution = 8 + self.__char_race.get_constitution()
-        self.__intelligence = 8 + self.__char_race.get_intelligence()
-        self.__wisdom = 8 + self.__char_race.get_wisdom()
-        self.__charisma = 8 + self.__char_race.get_charisma()
 
+        # Base Stats
+        self.strength = Attribute("Forza", 8, 1, 99)
+        self.dexterity = Attribute("Destrezza", 8, 1, 99)
+        self.constitution = Attribute("Costituzione", 8, 1, 99)
+        self.intelligence = Attribute("Intelligenza", 8, 1, 99)
+        self.wisdom = Attribute("Saggezza", 8, 1, 99)
+        self.charisma = Attribute("Carisma", 8, 1, 99)
+
+        # Bonus derivanti da classi / razze
+        race_name = self.__char_race.get_name()
+        self.strength.add_modifier(FixedModifier(race_name, self.__char_race.get_strength()))
+        self.dexterity.add_modifier(FixedModifier(race_name, self.__char_race.get_dexterity()))
+        self.constitution.add_modifier(FixedModifier(race_name, self.__char_race.get_constitution()))
+        self.intelligence.add_modifier(FixedModifier(race_name, self.__char_race.get_intelligence()))
+        self.wisdom.add_modifier(FixedModifier(race_name, self.__char_race.get_wisdom()))
+        self.charisma.add_modifier(FixedModifier(race_name, self.__char_race.get_charisma()))
+
+        #
+        self.assign_bonus_points(bonus_points)
+
+        # HP
+        self.__max_hit_points = self.calculate_max_hp()
+        self.__current_hit_points = self.__max_hit_points
+
+    def assign_bonus_points(self, bonus_points: int = 30):
         # Bonus
+        strength = 0
+        dexterity = 0
+        intelligence = 0
+        constitution = 0
+        wisdom = 0
+        charisma = 0
         if bonus_points > 30:
             bonus_points = 30
         while bonus_points > 0:
             roll = random.randint(1, 6)
             if roll == 1:
-                self.__strength += 1
+                strength += 1
             elif roll == 2:
-                self.__dexterity += 1
+                dexterity += 1
             elif roll == 3:
-                self.__constitution += 1
+                constitution += 1
             elif roll == 4:
-                self.__intelligence += 1
+                intelligence += 1
             elif roll == 5:
-                self.__wisdom += 1
+                wisdom += 1
             elif roll == 6:
-                self.__charisma += 1
+                charisma += 1
             bonus_points -= 1
 
-        # HP
-        self.__max_hit_points = self.calculate_max_hp()
-        self.__current_hit_points = self.__max_hit_points
+        self.strength.add_modifier(FixedModifier("Bonus Points", strength))
+        self.dexterity.add_modifier(FixedModifier("Bonus Points", dexterity))
+        self.intelligence.add_modifier(FixedModifier("Bonus Points", intelligence))
+        self.constitution.add_modifier(FixedModifier("Bonus Points", constitution))
+        self.wisdom.add_modifier(FixedModifier("Bonus Points", wisdom))
+        self.charisma.add_modifier(FixedModifier("Bonus Points", charisma))
 
     def get_level(self):
         return self.__level
@@ -90,7 +121,7 @@ class Character:
     def calculate_max_hp(self):
         hp = self.__char_class.get_base_hp()
         hp += self.__char_class.get_hp_for_level_up() * (self.__level - 1)
-        hp += self.__constitution
+        hp += self.constitution.get_current_value()
         return hp
 
     def gain_experience(self, exp_points: int) -> None:
@@ -187,10 +218,10 @@ class Character:
             print("Attacco fallito")
 
     def melee_attack(self, target: "Character") -> None:
-        self.attack(target, self.__strength, self.__melee_weapon, self.__strength)
+        self.attack(target, self.strength.get_current_value(), self.__melee_weapon, self.strength.get_current_value())
 
     def ranged_attack(self, target: "Character") -> None:
-        self.attack(target, self.__dexterity, self.__ranged_weapon, self.__dexterity)
+        self.attack(target, self.dexterity.get_current_value(), self.__ranged_weapon, self.dexterity.get_current_value())
 
     def attack_hits(self, target: "Character", bonus: int) -> bool:
         roll = d20()
@@ -204,7 +235,7 @@ class Character:
         return False
 
     def get_armor_class(self) -> int:
-        armor_class = 5 + (self.__dexterity / 2) + self.__bonus_ca
+        armor_class = 5 + (self.dexterity.get_current_value() / 2) + self.__bonus_ca
         if self.__armor is not None:
             armor_class += self.__armor.defense
         if self.__shield is not None:
@@ -227,13 +258,13 @@ class Character:
         return False
 
     def observe(self, difficulty: int) -> bool:
-        total = 2 + self.__wisdom + d20()
+        total = 2 + self.wisdom.get_current_value() + d20()
         if total > difficulty:
             return True
         return False
 
     def listen(self, difficulty: int) -> bool:
-        total = 2 + self.__charisma + d20()
+        total = 2 + self.charisma.get_current_value() + d20()
         if total > difficulty:
             return True
         return False
@@ -245,8 +276,9 @@ class Character:
 
         # Stats
         description += f"HP: {self.__current_hit_points}/{self.__max_hit_points}, CA: {self.get_armor_class()}\n"
-        description += f"STR: {self.__strength}, DEX: {self.__dexterity}, CON: {self.__constitution}, "
-        description += f"INT: {self.__intelligence}, WIS: {self.__wisdom}, CHA: {self.__charisma}\n"
+        description += f"STR: {self.strength.get_current_value()}, DEX: {self.dexterity.get_current_value()}, "
+        description += f"CON: {self.constitution.get_current_value()}, INT: {self.intelligence.get_current_value()}, "
+        description += f"WIS: {self.wisdom.get_current_value()}, CHA: {self.charisma.get_current_value()}\n"
 
         # Equipaggiamento
         description += "--- Equipaggiamento ---\n"
