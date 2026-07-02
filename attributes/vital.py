@@ -10,20 +10,31 @@ class Vital(Attribute):
         super().__init__(name, base_value, min_value, max_value)
         self.__current_value = 1
 
-    def consume(self, value):
+    def heal(self, value):
         if value <= 0:
+            print("Il valore non può essere negativo o nullo")
             return
 
-        current_value = self.get_current_value() - value
-        if current_value < self._min_value:
-            current_value = self._min_value
-        if current_value > self.get_current_max_value():
-            current_value = self.get_current_max_value()
+        self.__current_value = self.clamp(self.get_current_value() + value) / self.get_current_max_value()
 
-        self.__current_value = current_value / self.get_current_max_value()
+    def consume(self, value):
+        if value <= 0:
+            print("Il valore non può essere negativo o nullo")
+            return
+
+        self.__current_value = self.clamp(self.get_current_value() - value) / self.get_current_max_value()
 
     def get_current_value(self):
         return floor(self.__current_value * self.get_current_max_value())
 
     def get_current_max_value(self):
-        return super().get_current_value()
+        current_value = self.get_base_value()
+        current_value = self.apply_modifiers(current_value)
+        current_value = self.clamp(current_value)
+        return floor(current_value)
+
+    def __str__(self):
+        ret = f"{self.get_name()}: {self.get_current_value()} / {self.get_current_max_value()} ({self.get_base_value()})\n"
+        for modifier in self.get_modifiers():
+            ret += modifier.__str__() + "\n"
+        return ret

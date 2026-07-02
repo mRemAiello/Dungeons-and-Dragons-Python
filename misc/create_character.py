@@ -12,7 +12,7 @@ def create_new_character(name, race_number, class_number):
     character = Character(name, char_race, char_class)
 
     # Equipaggia oggetti
-    for item in char_class.get_starting_items():
+    for item in char_class.get_starting_items(character):
         character.equip_item(item)
 
     return character

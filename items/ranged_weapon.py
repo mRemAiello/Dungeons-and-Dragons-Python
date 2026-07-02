@@ -1,8 +1,8 @@
+from items.equip import Equip
 from misc.dice import dx
-from items.item import Item
 
 
-class RangedWeapon(Item):
+class RangedWeapon(Equip):
     attack = 0
 
     def __init__(self, name, sale_cost, attack):

@@ -1,3 +1,6 @@
+from attributes.fixed_modifier import FixedModifier
+from gameplay.character import Character
+from items.item_modifier import ItemModifier
 from misc.dice import d6
 from classes.base_class import BaseClass
 from items.weapon import Weapon
@@ -20,8 +23,10 @@ class Thief(BaseClass):
     def roll_dice(self):
         return d6()
 
-    def get_starting_items(self):
+    def get_starting_items(self, character: "Character"):
         short_sword = Weapon("Spada Corta", 16, 6)
+        modifiers = [ItemModifier(FixedModifier(short_sword, 5), character.dexterity)]
+        short_sword.assign_modifiers(modifiers)
         leather_armor = Armor("Armatura di cuoio", 40, 11)
         return [short_sword, leather_armor]
 

@@ -1,3 +1,4 @@
+from attributes.fixed_modifier import FixedModifier
 from misc.create_character import create_new_character
 from misc.create_character import create_new_random_character
 from misc.create_character import create_new_random_enemy
@@ -17,15 +18,13 @@ player = create_new_character(name, race_number, class_number)
 player.gain_experience(1200)
 
 # Nemico
-enemy = create_new_random_enemy("Bandito")
+# enemy = create_new_random_enemy("Bandito")
 
 #
-# print(player)
-
-print(player.strength)
+print(player)
 print(player.dexterity)
-print(player.constitution)
-print(player.hp)
+
+
 
 """print(enemy)
 

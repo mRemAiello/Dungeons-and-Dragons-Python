@@ -1,3 +1,6 @@
+from gameplay.character import Character
+
+
 class BaseClass:
 
     # Nome della classe (Da sovrascrivere nelle sottoclassi)
@@ -25,7 +28,7 @@ class BaseClass:
         return 0
 
     # Restituisce una lista di Item (armi, armature, ecc) di partenza
-    def get_starting_items(self):
+    def get_starting_items(self, character: "Character"):
         return []
 
     # In base al dado della classe e ai lanci, mi darà le monete iniziali

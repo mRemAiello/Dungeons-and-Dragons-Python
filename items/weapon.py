@@ -1,8 +1,8 @@
+from items.equip import Equip
 from misc.dice import dx
-from items.item import Item
 
 
-class Weapon(Item):
+class Weapon(Equip):
     attack = 0
 
     def __init__(self, name, sale_cost, attack):
@@ -14,5 +14,5 @@ class Weapon(Item):
 
     def __str__(self):
         description = super().__str__()
-        description += f", Attack: D{self.attack}"
+        description += f"Attack: D{self.attack}"
         return description
